@@ -1,3 +1,5 @@
+// adapted from: http://www.makeinjava.com/insert-elementnode-sorted-singly-linked-list-java-example-algorithm/
+
 class ListNode {
 	public int data;
 	public ListNode next;
