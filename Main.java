@@ -1,4 +1,5 @@
 // adapted from: http://www.makeinjava.com/insert-elementnode-sorted-singly-linked-list-java-example-algorithm/
+// tested at: https://www.onlinegdb.com/edit/B1ftX1H2f
 
 class ListNode {
 	public int data;
@@ -12,39 +13,58 @@ class ListNode {
 
 class SortedSinglyLinkedList {
 
-	public static ListNode insert(ListNode head, ListNode newNode) {
+	ListNode head = null;
+
+	public void insert(ListNode newNode) {
+
+		int insertedValue = newNode.data; // save for debug print output
 		
-		// first node to be inserted
-		if (null == head) {
-			return newNode;
+		// if list is empty or newNode < head (special cases)
+		if (null == head || newNode.data < head.data) {
+		    if (null != head)
+		    {
+    	        newNode.next = this.head;
+		    }
+		    this.head = newNode; // assign first node to head
+    		this.print(insertedValue);
+		    return; // no sorting required
 		}
+
+		ListNode temp = null;
+		ListNode currentNode = head;
 		
-		ListNode prev = null;
-		ListNode iter = head;
-		
-		while (iter != null && iter.data < newNode.data) {
+		while (currentNode != null && currentNode.data < newNode.data) {
 			// take backup of prev node
 			// used in appending the new node
-			prev = iter;
-			iter = iter.next;
+			temp = currentNode;
+			currentNode = currentNode.next;
 		}
 		
-		newNode.next = prev.next;
-		prev.next = newNode;
-		return head;
+		if (null != temp)
+		{
+		    newNode.next = temp.next;
+    		temp.next = newNode;
+		}
+		
+		this.print(insertedValue);
 	}
 
-	public static void print(ListNode head) {
+	public void print(int insertedValue) {
+		System.out.printf("\nSingle linked list after inserting %d is: ", insertedValue);
 		
-		while (head != null) {
-			System.out.printf("\ndata(%d) --> ", head.data);
-			if (null != head.next)
+		ListNode temp = this.head;
+		while (temp != null) {
+			System.out.printf("\ndata(%d) --> ", temp.data);
+			if (null != temp.next)
 			{
-    			System.out.printf("next(%d) ", head.next.data);
+    			System.out.printf("next(%d)", temp.next.data);
 			}
-			head = head.next;
+			else
+			{
+    			System.out.printf("next(null)");
+			}
+			temp = temp.next;
 		}
-		System.out.println("");
 	}
 }
 
@@ -53,27 +73,34 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		int[] listData = { 1, 3, 5, 9 };
-		ListNode head = new ListNode(listData[0]);
-		
-		for (int count = 1; count < listData.length; count++) {
-			//SortedSinglyLinkedList.prepareList(head, listData[count]);
-			SortedSinglyLinkedList.insert(head, new ListNode(listData[count]));
+		//int[] listData = { 1, 3, 5, 9 };
+		int[] listData = { 5, 3, 9, 4 };
+
+		SortedSinglyLinkedList testList = new SortedSinglyLinkedList();
+
+		for (int count = 0; count < listData.length; count++) {
+			testList.insert(new ListNode(listData[count]));
 		}
-		
-		System.out.printf("1. Single linked list is initially : ");
-		SortedSinglyLinkedList.print(head);
 
-		int newData = 4;
+		int newData = 7; // test adding an intermediate value
 		ListNode newNode = new ListNode(newData);
-		head = SortedSinglyLinkedList.insert(head, newNode);
-		System.out.printf("2. Single linked list after inserting %d is : ", newData);
-		SortedSinglyLinkedList.print(head);
+		testList.insert(newNode);
 
-		/*newData = 7;
+		newData = 1; // test adding a smaller value
 		newNode = new ListNode(newData);
-		head = SortedSinglyLinkedList.insert(head, newNode);
-		System.out.printf("3. Single linked list after inserting %d is : ", newData);
-		SortedSinglyLinkedList.print(head);*/
+		testList.insert(newNode);
+
+		newData = 10; // test adding a bigger value
+		newNode = new ListNode(newData);
+		testList.insert(newNode);
+
+		newData = -1; // test adding a negative value
+		newNode = new ListNode(newData);
+		testList.insert(newNode);
+
+		newData = 0; // test adding zero
+		newNode = new ListNode(newData);
+		testList.insert(newNode);
 	}
 }
+
